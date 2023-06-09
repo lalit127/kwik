@@ -6,6 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kwik/utils/customButton.dart';
 import 'package:kwik/view/screens/profile_page.dart';
 import 'package:kwik/view/screens/profile_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/auth_provider.dart';
 
 List cars = [
   {'id': 0, 'name': 'swipe up'},
@@ -89,6 +92,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final ap = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
         key: _scaffoldKey,
@@ -277,16 +281,15 @@ class _MapScreenState extends State<MapScreen> {
             children: [
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage:
-                        AssetImage("lib/assets/Images/profile.jpg")),
+                    backgroundImage: NetworkImage(ap.userModel.profilePic)),
                 accountEmail: Padding(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text('lalit127@github'),
+                  child: Text(ap.userModel.email),
                 ),
                 accountName: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 27, 0, 0),
                   child: Text(
-                    'Lalit Sharma',
+                    ap.userModel.name,
                     style: TextStyle(fontSize: 21.0),
                   ),
                 ),
