@@ -30,7 +30,7 @@ class kwikApp extends StatelessWidget {
       child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(useMaterial3: true),
-          home: HomeScreen()),
+          home: OnBoardScreen()),
     );
   }
 }

@@ -59,6 +59,9 @@ dependencies:
   flutter_localization: ^0.1.11
   permission_handler: ^10.3.0
   google_api_headers: 1.6.0
+
+  pinput: any
+  image_picker: any
  
 
   # The following adds the Cupertino Icons font to your application.

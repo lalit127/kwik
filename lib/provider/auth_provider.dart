@@ -35,31 +35,40 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future setSignIn() async {
+    final SharedPreferences s = await SharedPreferences.getInstance();
+    s.setBool("is_signedin", true);
+    _isSignedIn = true;
+    notifyListeners();
+  }
+
+  // signin
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       await _firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
-          await _firebaseAuth.signInWithCredential(phoneAuthCredential);
-        },
-        verificationFailed: (error) {
-          throw Exception(error.message);
-        },
-        codeSent: ((verificationId, forceResendingToken) async => {
-              Get.to(OtpScreen(
-                verificationId: verificationId,
-                phoneNumber: 'phoneNumber',
-              ))
-            }),
-        codeAutoRetrievalTimeout: (verificationId) {},
-      );
+          phoneNumber: phoneNumber,
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {
+            await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+          },
+          verificationFailed: (error) {
+            throw Exception(error.message);
+          },
+          codeSent: (verificationId, forceResendingToken) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OtpScreen(verificationId: verificationId),
+              ),
+            );
+          },
+          codeAutoRetrievalTimeout: (verificationId) {});
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message.toString());
     }
   }
- // method -2 
- 
-  //verify OTP
+
+  // verify otp
   void verifyOtp({
     required BuildContext context,
     required String verificationId,
@@ -88,16 +97,16 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  //Database Operations
 
+  // DATABASE OPERTAIONS
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
     if (snapshot.exists) {
-      print("user exists");
+      print("USER EXISTS");
       return true;
     } else {
-      print("New user");
+      print("NEW USER");
       return false;
     }
   }
